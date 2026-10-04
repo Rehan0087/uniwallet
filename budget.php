@@ -77,23 +77,8 @@ $remaining = $totalLimit !== null ? $totalLimit - $spent : null;
 // "Days left" only means something for the month you are currently in.
 $daysInMonth   = (int) date('t', strtotime($month . '-01'));
 $isThisMonth   = $month === current_month();
-$isPastMonth   = $month < current_month();
 $daysRemaining = $isThisMonth ? max(1, $daysInMonth - (int) date('j') + 1) : $daysInMonth;
 $perDay        = ($remaining !== null && $remaining > 0) ? $remaining / $daysRemaining : null;
-
-// Categories with either a limit or some spending, biggest spend first.
-$tracked = [];
-foreach ($categories as $category) {
-    $id    = (int) $category['category_id'];
-    $rowSpend = $spendByCat[$id]['total'] ?? 0.0;
-    $rowLimit = $limits[$id] ?? null;
-    if ($rowSpend > 0 || $rowLimit !== null) {
-        $tracked[] = ['category' => $category, 'spent' => $rowSpend, 'limit' => $rowLimit];
-    }
-}
-usort($tracked, static fn(array $a, array $b): int => $b['spent'] <=> $a['spent']);
-
-$sumOfCategoryLimits = array_sum($limits);
 
 // Month-end projection at the current pace (only meaningful mid-month).
 $dayOfMonth = $isThisMonth ? (int) date('j') : $daysInMonth;
