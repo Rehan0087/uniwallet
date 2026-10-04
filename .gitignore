@@ -1,0 +1,13 @@
+# Local overrides — keep real database credentials out of version control.
+config/config.local.php
+
+# Editor / OS noise
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Exported files and logs
+*.log
+*.csv

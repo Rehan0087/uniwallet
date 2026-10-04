@@ -1,0 +1,9 @@
+# These files are includes, never pages. Block direct browser access.
+# (Apache 2.4 syntax first, with the 2.2 fallback for older XAMPP builds.)
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+</IfModule>
