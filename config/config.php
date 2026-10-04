@@ -8,7 +8,7 @@
 
 // ---------------------------------------------------------------- database
 define('DB_HOST', '127.0.0.1');
-define('DB_NAME', 'uniwallet');
+define('DB_NAME', 'uniwallet_app');   // its own name, so it never clashes with another project's database
 define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_CHARSET', 'utf8mb4');

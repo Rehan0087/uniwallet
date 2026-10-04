@@ -2,9 +2,9 @@
 -- Import this file in phpMyAdmin (Import tab) or run:
 --   mysql -u root -p < sql/schema.sql
 
-CREATE DATABASE IF NOT EXISTS `uniwallet`
+CREATE DATABASE IF NOT EXISTS `uniwallet_app`
   CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `uniwallet`;
+USE `uniwallet_app`;
 
 -- Drop in reverse dependency order so re-importing is safe.
 DROP TABLE IF EXISTS `savings_goals`;

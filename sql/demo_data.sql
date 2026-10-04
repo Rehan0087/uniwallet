@@ -8,7 +8,7 @@
 -- Dates are relative to the day you import. Safe to re-run: it clears the
 -- demo account first and leaves any real accounts untouched.
 
-USE `uniwallet`;
+USE `uniwallet_app`;
 
 DELETE FROM `users` WHERE `email` = "demo@uniwallet.test";
 
