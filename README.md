@@ -1,11 +1,15 @@
 # UniWallet
 
-A student budget tracker: log expenses, set monthly budgets, track savings
-goals, and see where the money actually went.
+A budget tracker for UIU students in Dhaka: log expenses in taka (৳), set
+monthly budgets, track savings goals, and see where the money actually went.
+Includes a landing page, a dashboard that works out what is safe to spend
+today, light and dark themes, and a profile & settings page.
 
 Built with plain HTML/CSS/JS, PHP 8 + PDO, and MySQL — no framework, no ORM,
 no build step. The only third-party library is Chart.js, and it is vendored
-locally so the app works with no internet connection.
+locally, along with the fonts, so the app works with no internet connection.
+
+> An independent student project, not affiliated with United International University.
 
 ---
 
@@ -20,7 +24,7 @@ locally so the app works with no internet connection.
 
 3. **Create the database.** Open <http://localhost/phpmyadmin>, go to the
    **Import** tab, choose `sql/schema.sql`, and click Go. That creates the
-   `uniwallet` database and all five tables.
+   `uniwallet_app` database and all five tables.
 
 4. **(Optional) Load the demo data.** Import `sql/demo_data.sql` the same way
    for an account with six months of expenses, budgets and goals already in
@@ -32,6 +36,10 @@ locally so the app works with no internet connection.
    | password | `demo1234` |
 
 5. **Open** <http://localhost/uniwallet/> and register an account.
+
+If you set up the database before the profile page and dark theme existed,
+run `sql/upgrade_warn_pct.sql` and `sql/upgrade_theme.sql` once (a fresh
+import of `schema.sql` already includes both columns).
 
 **Not using XAMPP?** Run PHP's built-in server with the router so unknown URLs
 get the friendly 404 page and `includes/` stays blocked:
@@ -61,19 +69,22 @@ Everything adjustable lives at the top of `config/config.php`:
 
 ---
 
-## The six modules
+## The modules
 
 | Module | Pages | Notes |
 |---|---|---|
-| 1. Accounts | `register.php`, `login.php`, `logout.php` | Passwords hashed with `password_hash()`; sessions regenerated on login |
-| 2. Expense tracking | `expenses.php` | Add / edit / delete, filter by date range and category, paginated 20 per page |
-| 3. Monthly budget | `budget.php` | Whole-month cap plus per-category caps, with progress bars that turn amber at 80% and red at 100% |
-| 4. Savings goals | `goals.php` | Targets, deposits, deadlines, and a "save X per month" pace hint |
-| 5. Spending insights | `insights.php` | Category doughnut, 6-month trend, cumulative pace vs budget (Chart.js) |
+| 1. Accounts | `register.php`, `login.php`, `logout.php` | Passwords hashed with `password_hash()`; sessions regenerated on login; password show/hide and strength hint |
+| 2. Expense tracking | `expenses.php` | Add / edit / delete, search notes, filter by date and category, grouped by day, paginated 20 per page |
+| 3. Monthly budget | `budget.php` | Whole-month cap plus per-category caps, live allocation meter, suggested split, copy from last month; bars turn amber at your chosen % and red at 100% |
+| 4. Savings goals | `goals.php` | Targets, deposits with quick amounts, deadlines, and a "save X per month" pace hint |
+| 5. Spending insights | `insights.php` | Category doughnut, 6-month trend, spending pace vs budget, weekday pattern, biggest expenses (Chart.js) |
 | 6. Reports & export | `export.php` | CSV via PHP's built-in `fputcsv()` — no PDF library needed |
+| 7. Profile & settings | `profile.php` | Name/email, password change, light/dark/system theme, budget-alert level, data export, account deletion |
 
-`dashboard.php` pulls the highlights of all six into one screen, and
-`categories.php` manages the category list the other pages are organised by.
+`index.php` is the public landing page (with an allowance calculator),
+`dashboard.php` pulls the highlights into one screen, and `categories.php`
+manages the category list the other pages are organised by. Friendly 403 /
+404 / 500 pages come from `error.php`.
 
 ---
 
@@ -81,37 +92,43 @@ Everything adjustable lives at the top of `config/config.php`:
 
 ```
 uniwallet/
-├── index.php              redirects to the dashboard or login
+├── index.php              landing page (guests) / redirect to dashboard
 ├── login.php  register.php  logout.php
-├── dashboard.php          month-at-a-glance overview
-├── expenses.php           add / edit / delete / filter
+├── dashboard.php          month-at-a-glance, quick-add, alerts
+├── expenses.php           add / edit / delete / search / filter
 ├── budget.php             monthly and per-category limits
 ├── goals.php              savings goals and deposits
 ├── insights.php           charts and stats
 ├── categories.php         manage categories
+├── profile.php            profile & settings
 ├── export.php             CSV download
+├── error.php  router.php  .htaccess     403/404/500 pages and routing
 │
-├── config/
-│   └── config.php         database credentials and app settings
+├── config/config.php      database credentials and app settings
 │
 ├── includes/
 │   ├── db.php             PDO connection
 │   ├── auth.php           sessions, login, page guards
-│   ├── helpers.php        escaping, CSRF, flash messages, validation
+│   ├── helpers.php        escaping, CSRF, flash, money, trimester, theme
 │   ├── finance.php        shared spending / budget / goal queries
 │   ├── expense_filters.php  filter logic shared by the list and the export
+│   ├── error_page.php     error pages that work even if the DB is down
 │   ├── header.php  footer.php            layout for logged-in pages
 │   └── auth_header.php  auth_footer.php  layout for login / register
 │
 ├── assets/
-│   ├── css/style.css      all styling
-│   ├── js/app.js          form validation, delete confirmations
-│   ├── js/charts.js       Chart.js setup
+│   ├── css/style.css      all styling, including the dark theme
+│   ├── js/                app, charts, theme, budget, profile, landing
+│   ├── fonts/             Bricolage Grotesque, Plus Jakarta Sans, Hind Siliguri
+│   ├── img/favicon.svg
 │   └── vendor/chart.umd.min.js
 │
-└── sql/
-    ├── schema.sql         tables — import this first
-    └── demo_data.sql      optional sample data
+├── sql/
+│   ├── schema.sql         tables — import this first
+│   ├── demo_data.sql      optional sample data (BDT, UIU categories)
+│   └── upgrade_*.sql      one-off column additions for older databases
+│
+└── tests/smoke.sh         end-to-end smoke test (see Testing notes)
 ```
 
 ---
@@ -120,7 +137,7 @@ uniwallet/
 
 Five tables, as designed:
 
-**users** — `user_id`, `full_name`, `email` (unique), `password_hash`, `created_at`
+**users** — `user_id`, `full_name`, `email` (unique), `password_hash`, `warn_pct`, `theme`, `created_at`
 
 **categories** — `category_id`, `user_id`, `name`, `icon`, `is_default`
 Each account gets its own copy of the eight default categories at
@@ -176,6 +193,14 @@ The SQL was verified against MariaDB 11 with `ONLY_FULL_GROUP_BY` enabled
 through registration, expense CRUD, filtering, budgets, goal deposits,
 insights, CSV export, cross-account isolation and logout.
 
+A smoke test covers every page and the main security rules (CSRF, escaping,
+input validation, access control). With the app running and the demo data
+imported:
+
+```
+bash tests/smoke.sh
+```
+
 One thing worth keeping: `APP_DEBUG` is `true` by default so setup problems
 are visible. Turn it off before submitting — on PHP 8.4+ a stray notice
 printed mid-response is untidy on a page, and `export.php` explicitly
@@ -187,7 +212,9 @@ CSV would corrupt the download).
 ## Scope
 
 **In this version:** accounts, expense tracking, monthly budgets with
-progress bars, savings goals, spending insights, CSV export.
+progress bars, savings goals, spending insights, CSV export, profile &
+settings, light/dark theme, friendly error pages.
 
-**Deliberately left for later:** email and browser reminders, PDF export,
-spending prediction, shared/group budgets, and a mobile app.
+**Deliberately left for later:** password reset by email, email and browser
+reminders, PDF export, spending prediction, shared/group budgets, bKash/Nagad
+import, a Bangla interface, and a mobile app.
