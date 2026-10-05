@@ -1862,3 +1862,19 @@ a.who.is-active { background: rgba(255, 255, 255, .1); }
   .theme-preview { height: 64px; }
   .kv { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* ---------------------------------------------------------- forgot password */
+.label-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.forgot-link { font-size: .8125rem; font-weight: 650; text-decoration: none; }
+.forgot-link:hover { text-decoration: underline; }
+.dev-note {
+  margin: 20px 0 0;
+  padding: 14px 16px;
+  border: 1px dashed var(--gold);
+  border-radius: var(--radius-sm);
+  background: var(--gold-soft);
+  font-size: .875rem;
+}
+.dev-note strong { display: block; color: var(--gold-deep); text-transform: uppercase; letter-spacing: .08em; font-size: .6875rem; }
+.dev-note p { margin: 6px 0 8px; color: var(--muted); }
+.dev-link { display: block; overflow-wrap: anywhere; font-weight: 600; }
