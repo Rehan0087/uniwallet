@@ -2,11 +2,12 @@
 -- Import this file in phpMyAdmin (Import tab) or run:
 --   mysql -u root -p < sql/schema.sql
 
-CREATE DATABASE IF NOT EXISTS `uniwallet`
+CREATE DATABASE IF NOT EXISTS `uniwallet_app`
   CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `uniwallet`;
+USE `uniwallet_app`;
 
 -- Drop in reverse dependency order so re-importing is safe.
+DROP TABLE IF EXISTS `password_resets`;
 DROP TABLE IF EXISTS `savings_goals`;
 DROP TABLE IF EXISTS `budgets`;
 DROP TABLE IF EXISTS `expenses`;
@@ -94,5 +95,22 @@ CREATE TABLE `savings_goals` (
   PRIMARY KEY (`goal_id`),
   KEY `idx_goal_user` (`user_id`),
   CONSTRAINT `fk_goal_user` FOREIGN KEY (`user_id`)
+    REFERENCES `users` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ------------------------------------------------------- password_resets
+-- One row per "forgot password" request. Only a SHA-256 hash of the emailed
+-- token is stored, so a copy of this table can't be used to reset anyone.
+CREATE TABLE `password_resets` (
+  `reset_id`   INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id`    INT UNSIGNED NOT NULL,
+  `token_hash` CHAR(64) NOT NULL,
+  `expires_at` DATETIME NOT NULL,
+  `used_at`    DATETIME NULL DEFAULT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`reset_id`),
+  UNIQUE KEY `uq_reset_token` (`token_hash`),
+  KEY `ix_reset_user` (`user_id`),
+  CONSTRAINT `fk_reset_user` FOREIGN KEY (`user_id`)
     REFERENCES `users` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

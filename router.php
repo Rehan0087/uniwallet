@@ -11,7 +11,7 @@
 
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 
-if (preg_match('#^/(includes|config|sql)(/|$)#', $path)) {
+if (preg_match('#^/(includes|config|sql|storage|tests)(/|$)#', $path)) {
     require __DIR__ . '/includes/error_page.php';
     show_error_page(403);
 }

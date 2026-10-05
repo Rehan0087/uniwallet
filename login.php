@@ -60,7 +60,10 @@ require __DIR__ . '/includes/auth_header.php';
   </div>
 
   <div class="field">
-    <label for="password">Password</label>
+    <div class="label-row">
+      <label for="password">Password</label>
+      <a class="forgot-link" href="forgot.php">Forgot password?</a>
+    </div>
     <input type="password" id="password" name="password"
            autocomplete="current-password"
            data-validate="required" data-toggle-password

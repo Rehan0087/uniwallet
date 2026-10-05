@@ -8,7 +8,7 @@
 
 // ---------------------------------------------------------------- database
 define('DB_HOST', '127.0.0.1');
-define('DB_NAME', 'uniwallet');
+define('DB_NAME', 'uniwallet_app');   // its own name, so it never clashes with another project's database
 define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_CHARSET', 'utf8mb4');
@@ -26,6 +26,14 @@ define('APP_TIMEZONE', 'Asia/Dhaka');
 
 // Show PHP errors on screen. Set to false before submitting/deploying.
 define('APP_DEBUG', true);
+
+// Forgot password: with no mail server (e.g. a fresh XAMPP), the reset link is
+// shown on screen so the feature can be demonstrated. Set this to false once
+// real email works — then the link is only ever sent to the user's inbox.
+define('RESET_SHOW_LINK', true);
+
+// Minutes a reset link stays valid.
+define('RESET_TTL_MINUTES', 60);
 
 // -------------------------------------------------------------- runtime
 if (APP_DEBUG) {

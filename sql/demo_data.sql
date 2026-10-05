@@ -8,7 +8,7 @@
 -- Dates are relative to the day you import. Safe to re-run: it clears the
 -- demo account first and leaves any real accounts untouched.
 
-USE `uniwallet`;
+USE `uniwallet_app`;
 
 DELETE FROM `users` WHERE `email` = "demo@uniwallet.test";
 
@@ -78,7 +78,6 @@ INSERT INTO `expenses` (`user_id`, `category_id`, `amount`, `spent_on`, `note`) 
   (@uid, @cat_food, 130.00, DATE_SUB(CURDATE(), INTERVAL 153 DAY), "cha + singara"),
   (@uid, @cat_transport, 45.00, DATE_SUB(CURDATE(), INTERVAL 152 DAY), "Uber home"),
   (@uid, @cat_other, 435.00, DATE_SUB(CURDATE(), INTERVAL 152 DAY), "gift"),
-  (@uid, @cat_rent, 7000.00, DATE_SUB(CURDATE(), INTERVAL 152 DAY), "mess + room rent"),
   (@uid, @cat_fun, 550.00, DATE_SUB(CURDATE(), INTERVAL 151 DAY), "friends' treat"),
   (@uid, @cat_food, 75.00, DATE_SUB(CURDATE(), INTERVAL 151 DAY), "tehari"),
   (@uid, @cat_transport, 55.00, DATE_SUB(CURDATE(), INTERVAL 150 DAY), "rickshaw to campus"),
@@ -128,7 +127,6 @@ INSERT INTO `expenses` (`user_id`, `category_id`, `amount`, `spent_on`, `note`) 
   (@uid, @cat_transport, 135.00, DATE_SUB(CURDATE(), INTERVAL 124 DAY), "Uber home"),
   (@uid, @cat_transport, 145.00, DATE_SUB(CURDATE(), INTERVAL 124 DAY), "Uber home"),
   (@uid, @cat_transport, 95.00, DATE_SUB(CURDATE(), INTERVAL 123 DAY), "Uber home"),
-  (@uid, @cat_rent, 7000.00, DATE_SUB(CURDATE(), INTERVAL 122 DAY), "mess + room rent"),
   (@uid, @cat_books, 40.00, DATE_SUB(CURDATE(), INTERVAL 121 DAY), "lab manual"),
   (@uid, @cat_food, 120.00, DATE_SUB(CURDATE(), INTERVAL 121 DAY), "Fuska at Bashundhara gate"),
   (@uid, @cat_food, 65.00, DATE_SUB(CURDATE(), INTERVAL 120 DAY), "cha + singara"),
@@ -172,7 +170,6 @@ INSERT INTO `expenses` (`user_id`, `category_id`, `amount`, `spent_on`, `note`) 
   (@uid, @cat_food, 155.00, DATE_SUB(CURDATE(), INTERVAL 92 DAY), "biryani with friends"),
   (@uid, @cat_food, 125.00, DATE_SUB(CURDATE(), INTERVAL 92 DAY), "dinner at mess"),
   (@uid, @cat_food, 105.00, DATE_SUB(CURDATE(), INTERVAL 92 DAY), "canteen lunch"),
-  (@uid, @cat_rent, 7000.00, DATE_SUB(CURDATE(), INTERVAL 92 DAY), "mess + room rent"),
   (@uid, @cat_food, 60.00, DATE_SUB(CURDATE(), INTERVAL 91 DAY), "dinner at mess"),
   (@uid, @cat_transport, 55.00, DATE_SUB(CURDATE(), INTERVAL 90 DAY), "Uber home"),
   (@uid, @cat_transport, 150.00, DATE_SUB(CURDATE(), INTERVAL 90 DAY), "bus fare"),
@@ -226,7 +223,6 @@ INSERT INTO `expenses` (`user_id`, `category_id`, `amount`, `spent_on`, `note`) 
   (@uid, @cat_transport, 130.00, DATE_SUB(CURDATE(), INTERVAL 63 DAY), "rickshaw to campus"),
   (@uid, @cat_food, 70.00, DATE_SUB(CURDATE(), INTERVAL 62 DAY), "tehari"),
   (@uid, @cat_food, 120.00, DATE_SUB(CURDATE(), INTERVAL 62 DAY), "canteen lunch"),
-  (@uid, @cat_rent, 7000.00, DATE_SUB(CURDATE(), INTERVAL 62 DAY), "mess + room rent"),
   (@uid, @cat_other, 330.00, DATE_SUB(CURDATE(), INTERVAL 61 DAY), "medicine"),
   (@uid, @cat_food, 175.00, DATE_SUB(CURDATE(), INTERVAL 61 DAY), "biryani with friends"),
   (@uid, @cat_tuition, 22000.00, DATE_SUB(CURDATE(), INTERVAL 60 DAY), "trimester installment"),
@@ -267,7 +263,6 @@ INSERT INTO `expenses` (`user_id`, `category_id`, `amount`, `spent_on`, `note`) 
   (@uid, @cat_food, 155.00, DATE_SUB(CURDATE(), INTERVAL 34 DAY), "canteen lunch"),
   (@uid, @cat_food, 105.00, DATE_SUB(CURDATE(), INTERVAL 33 DAY), "biryani with friends"),
   (@uid, @cat_transport, 95.00, DATE_SUB(CURDATE(), INTERVAL 33 DAY), "CNG to Badda"),
-  (@uid, @cat_rent, 7000.00, DATE_SUB(CURDATE(), INTERVAL 32 DAY), "mess + room rent"),
   (@uid, @cat_fun, 545.00, DATE_SUB(CURDATE(), INTERVAL 31 DAY), "friends' treat"),
   (@uid, @cat_transport, 70.00, DATE_SUB(CURDATE(), INTERVAL 30 DAY), "rickshaw to campus"),
   (@uid, @cat_food, 115.00, DATE_SUB(CURDATE(), INTERVAL 30 DAY), "dinner at mess"),
@@ -308,16 +303,20 @@ INSERT INTO `expenses` (`user_id`, `category_id`, `amount`, `spent_on`, `note`) 
   (@uid, @cat_transport, 70.00, DATE_SUB(CURDATE(), INTERVAL 2 DAY), "bus fare"),
   (@uid, @cat_books, 210.00, DATE_SUB(CURDATE(), INTERVAL 2 DAY), "project report print"),
   (@uid, @cat_food, 60.00, DATE_SUB(CURDATE(), INTERVAL 2 DAY), "canteen lunch"),
-  (@uid, @cat_rent, 7000.00, DATE_SUB(CURDATE(), INTERVAL 2 DAY), "mess + room rent"),
   (@uid, @cat_food, 115.00, DATE_SUB(CURDATE(), INTERVAL 1 DAY), "canteen lunch"),
   (@uid, @cat_other, 205.00, DATE_SUB(CURDATE(), INTERVAL 0 DAY), "donation"),
   (@uid, @cat_food, 165.00, DATE_SUB(CURDATE(), INTERVAL 0 DAY), "cha + singara");
 
--- Extra entries so the current month always looks lived-in: the 1st of the
--- month (rent, data pack, trimester installment) plus the last two days.
+-- Rent is paid once on the 1st of every month (never twice). The same block gives
+-- the current month a data pack, a lab fee and the last two days of small spending.
 SET @first = DATE_FORMAT(CURDATE(), "%Y-%m-01");
 INSERT INTO `expenses` (`user_id`, `category_id`, `amount`, `spent_on`, `note`) VALUES
   (@uid, @cat_rent,      7000.00, @first, "mess + room rent"),
+  (@uid, @cat_rent,      7000.00, DATE_SUB(@first, INTERVAL 1 MONTH), "mess + room rent"),
+  (@uid, @cat_rent,      7000.00, DATE_SUB(@first, INTERVAL 2 MONTH), "mess + room rent"),
+  (@uid, @cat_rent,      7000.00, DATE_SUB(@first, INTERVAL 3 MONTH), "mess + room rent"),
+  (@uid, @cat_rent,      7000.00, DATE_SUB(@first, INTERVAL 4 MONTH), "mess + room rent"),
+  (@uid, @cat_rent,      7000.00, DATE_SUB(@first, INTERVAL 5 MONTH), "mess + room rent"),
   (@uid, @cat_tuition,   2500.00, @first, "lab fee installment"),
   (@uid, @cat_mobile,     399.00, @first, "Robi 30-day data pack"),
   (@uid, @cat_food,       220.00, @first, "groceries for the room"),

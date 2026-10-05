@@ -37,9 +37,9 @@ $term    = uiu_term();
 <meta name="csrf" content="<?= h(csrf_token()) ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= h($tab_title ?? $page_title) ?> · <?= h(APP_NAME) ?></title>
-<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="<?= h(asset('assets/css/style.css')) ?>">
 <meta name="theme-color" content="#0a2e23">
-<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="<?= h(asset('assets/img/favicon.svg')) ?>" type="image/svg+xml">
 </head>
 <body>
 
@@ -49,8 +49,8 @@ $term    = uiu_term();
 
   <aside class="sidebar">
     <a class="logo" href="dashboard.php" aria-label="UniWallet home">
-      <span class="logo-mark" aria-hidden="true">৳</span>
-      <span class="logo-name"><?= h(APP_NAME) ?></span>
+      <span class="logo-mark" aria-hidden="true"></span>
+      <span class="logo-name">Uni<b>Wallet</b></span>
     </a>
 
     <nav class="nav" aria-label="Main">

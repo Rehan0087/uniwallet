@@ -22,8 +22,8 @@ $term = uiu_term();
 <title><?= h(APP_NAME) ?> · Budget tracker for UIU students</title>
 <meta name="description" content="Track every taka of your allowance, set a monthly budget and save for what matters. Built for UIU students in Dhaka.">
 <meta name="theme-color" content="#0a2e23">
-<link rel="stylesheet" href="assets/css/style.css">
-<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="<?= h(asset('assets/css/style.css')) ?>">
+<link rel="icon" href="<?= h(asset('assets/img/favicon.svg')) ?>" type="image/svg+xml">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -36,8 +36,8 @@ $term = uiu_term();
   <div class="site-wrap">
     <header class="site-nav">
       <a class="logo" href="index.php">
-        <span class="logo-mark" aria-hidden="true">৳</span>
-        <span class="logo-name"><?= h(APP_NAME) ?></span>
+        <span class="logo-mark" aria-hidden="true"></span>
+        <span class="logo-name">Uni<b>Wallet</b></span>
       </a>
       <nav class="site-nav-links" aria-label="Main">
         <a href="#features">Features</a>
@@ -271,8 +271,8 @@ $term = uiu_term();
     <div class="site-foot-grid">
       <div class="site-foot-about">
         <a class="logo" href="index.php">
-          <span class="logo-mark" aria-hidden="true">৳</span>
-          <span class="logo-name"><?= h(APP_NAME) ?></span>
+          <span class="logo-mark" aria-hidden="true"></span>
+          <span class="logo-name">Uni<b>Wallet</b></span>
         </a>
         <p>A budget tracker for UIU students. Log what you spend in taka and make your allowance last the whole trimester.</p>
       </div>
@@ -297,7 +297,7 @@ $term = uiu_term();
   </footer>
 </div>
 
-<script src="assets/js/theme.js"></script>
-<script src="assets/js/landing.js"></script>
+<script src="<?= h(asset('assets/js/theme.js')) ?>"></script>
+<script src="<?= h(asset('assets/js/landing.js')) ?>"></script>
 </body>
 </html>
