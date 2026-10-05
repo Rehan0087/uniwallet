@@ -38,8 +38,21 @@ locally, along with the fonts, so the app works with no internet connection.
 5. **Open** <http://localhost/uniwallet/> and register an account.
 
 If you set up the database before the profile page and dark theme existed,
-run `sql/upgrade_warn_pct.sql` and `sql/upgrade_theme.sql` once (a fresh
-import of `schema.sql` already includes both columns).
+run `sql/upgrade_warn_pct.sql`, `sql/upgrade_theme.sql` and
+`sql/upgrade_password_resets.sql` once (a fresh import of `schema.sql` already
+includes them).
+
+### Forgot password
+
+A fresh XAMPP has no mail server, so with `RESET_SHOW_LINK` set to `true` in
+`config/config.php` the reset link is **shown on the page** (and also written to
+`storage/outbox.log`) so the feature can be demonstrated. Set it to `false`
+once email works, and the link is only ever sent by `mail()` to the user's
+inbox. On Linux, Apache must be able to write to `storage/`:
+`chmod 777 storage` (or `chown` it to the Apache user).
+
+Links work once, expire after `RESET_TTL_MINUTES` (60), and the page answers
+the same whether or not the email is registered.
 
 **Not using XAMPP?** Run PHP's built-in server with the router so unknown URLs
 get the friendly 404 page and `includes/` stays blocked:
@@ -73,7 +86,7 @@ Everything adjustable lives at the top of `config/config.php`:
 
 | Module | Pages | Notes |
 |---|---|---|
-| 1. Accounts | `register.php`, `login.php`, `logout.php` | Passwords hashed with `password_hash()`; sessions regenerated on login; password show/hide and strength hint |
+| 1. Accounts | `register.php`, `login.php`, `logout.php`, `forgot.php`, `reset.php` | Passwords hashed with `password_hash()`; sessions regenerated on login; password show/hide and strength hint; **forgot password** with one-time, expiring links |
 | 2. Expense tracking | `expenses.php` | Add / edit / delete, search notes, filter by date and category, grouped by day, paginated 20 per page |
 | 3. Monthly budget | `budget.php` | Whole-month cap plus per-category caps, live allocation meter, suggested split, copy from last month; bars turn amber at your chosen % and red at 100% |
 | 4. Savings goals | `goals.php` | Targets, deposits with quick amounts, deadlines, and a "save X per month" pace hint |
@@ -94,6 +107,7 @@ manages the category list the other pages are organised by. Friendly 403 /
 uniwallet/
 ├── index.php              landing page (guests) / redirect to dashboard
 ├── login.php  register.php  logout.php
+├── forgot.php  reset.php  forgot password and the page the emailed link opens
 ├── dashboard.php          month-at-a-glance, quick-add, alerts
 ├── expenses.php           add / edit / delete / search / filter
 ├── budget.php             monthly and per-category limits
@@ -112,6 +126,7 @@ uniwallet/
 │   ├── helpers.php        escaping, CSRF, flash, money, trimester, theme
 │   ├── finance.php        shared spending / budget / goal queries
 │   ├── expense_filters.php  filter logic shared by the list and the export
+│   ├── password_reset.php token issue / redeem logic for forgot password
 │   ├── error_page.php     error pages that work even if the DB is down
 │   ├── header.php  footer.php            layout for logged-in pages
 │   └── auth_header.php  auth_footer.php  layout for login / register
@@ -128,6 +143,7 @@ uniwallet/
 │   ├── demo_data.sql      optional sample data (BDT, UIU categories)
 │   └── upgrade_*.sql      one-off column additions for older databases
 │
+├── storage/               runtime files (the demo-mode mail log); blocked from the web
 └── tests/smoke.sh         end-to-end smoke test (see Testing notes)
 ```
 
@@ -215,6 +231,6 @@ CSV would corrupt the download).
 progress bars, savings goals, spending insights, CSV export, profile &
 settings, light/dark theme, friendly error pages.
 
-**Deliberately left for later:** password reset by email, email and browser
+**Deliberately left for later:** email and browser
 reminders, PDF export, spending prediction, shared/group budgets, bKash/Nagad
 import, a Bangla interface, and a mobile app.

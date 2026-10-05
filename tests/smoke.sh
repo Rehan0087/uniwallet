@@ -25,6 +25,16 @@ check "unknown URL is 404"            "$(curl -s -o /dev/null -w '%{http_code}' 
 check "includes/ is blocked (403)"    "$(curl -s -o /dev/null -w '%{http_code}' "$BASE/includes/db.php")" 403
 check "private page redirects guests" "$(curl -s -o /dev/null -w '%{http_code}' "$BASE/dashboard.php")" 302
 
+echo "Forgot password"
+check "login page links to forgot.php" "$(curl -s "$BASE/login.php" | grep -c 'forgot.php')" 1
+check "forgot.php is 200"              "$(curl -s -o /dev/null -w '%{http_code}' "$BASE/forgot.php")" 200
+check "bad reset token shows 'expired'" "$(curl -s "$BASE/reset.php?token=deadbeef" | grep -c '<h1 class="auth-title">This link has expired')" 1
+T="$(csrf forgot.php)"
+page="$(curl -s -b "$JAR" -c "$JAR" -d "csrf=$T&email=nobody-$RANDOM@nowhere.test" "$BASE/forgot.php")"
+check "unknown email gets the generic answer" "$(echo "$page" | grep -c 'a reset link is on its way')" 1
+check "unknown email leaks no reset link"     "$(echo "$page" | grep -c 'reset.php?token')" 0
+check "storage/ is not downloadable"          "$(curl -s -o /dev/null -w '%{http_code}' "$BASE/storage/outbox.log")" 403
+
 echo "Login"
 T="$(csrf login.php)"
 check "wrong password is refused" \
