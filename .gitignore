@@ -11,3 +11,6 @@ Thumbs.db
 # Exported files and logs
 *.log
 *.csv
+
+# Runtime files (the demo-mode mail log)
+storage/*.log
