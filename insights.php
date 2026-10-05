@@ -224,9 +224,9 @@ require __DIR__ . '/includes/header.php';
       <canvas id="categoryChart" aria-label="Spending by category" role="img"></canvas>
     </div>
     <div class="legend">
-      <?php foreach ($byCategory as $index => $row): ?>
+      <?php foreach (array_values($byCategory) as $n => $row): ?>
         <div class="legend-item">
-          <span class="legend-dot" style="background: <?= h($palette[$index % count($palette)]) ?>"></span>
+          <span class="legend-dot" style="background: <?= h($catColors[$n]) ?>"></span>
           <span><?= h($row['icon'] . ' ' . $row['name']) ?></span>
           <span class="legend-value">
             <?= h(money($row['total'])) ?> · <?= round(progress_pct($row['total'], $spent)) ?>%
