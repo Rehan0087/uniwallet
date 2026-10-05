@@ -328,7 +328,7 @@ if ($entries > 0) {
 
     $page_scripts = '<script src="assets/vendor/chart.umd.min.js"></script>'
         . '<script id="chart-data" type="application/json">' . js($chartConfig) . '</script>'
-        . '<script src="assets/js/charts.js"></script>';
+        . '<script src="' . h(asset('assets/js/charts.js')) . '"></script>';
 }
 
 require __DIR__ . '/includes/footer.php';

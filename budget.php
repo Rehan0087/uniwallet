@@ -91,7 +91,7 @@ $state = $totalLimit !== null ? progress_state($spent, $totalLimit) : '';
 $page_title = 'Budget';
 $active_nav = 'budget';
 $page_lead  = 'Decide what each month can cost, then watch it against what you actually spend.';
-$page_scripts = '<script src="assets/js/budget.js"></script>';
+$page_scripts = '<script src="' . h(asset('assets/js/budget.js')) . '"></script>';
 
 require __DIR__ . '/includes/header.php';
 ?>
