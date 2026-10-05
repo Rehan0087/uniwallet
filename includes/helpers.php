@@ -270,3 +270,17 @@ function theme_boot_script(): string
         . 'var d=p==="dark"||(p==="system"&&matchMedia("(prefers-color-scheme: dark)").matches);'
         . 'r.setAttribute("data-resolved",d?"dark":"light")}catch(e){}})();</script>';
 }
+
+
+// ------------------------------------------------------------------ assets
+
+/**
+ * URL for a file under assets/, with its modified time appended
+ * (assets/css/style.css?v=1760000000). Browsers cache by URL, so the moment
+ * a file changes its URL changes too and nobody is left on a stale copy.
+ */
+function asset(string $path): string
+{
+    $file = __DIR__ . '/../' . $path;
+    return $path . (is_file($file) ? '?v=' . filemtime($file) : '');
+}

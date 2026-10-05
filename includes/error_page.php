@@ -81,17 +81,17 @@ function show_error_page(int $code, ?Throwable $e = null): never
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title><?= (int) $code ?> · <?= h($page['note']) ?> · <?= h(APP_NAME) ?></title>
-<link rel="stylesheet" href="<?= h($base) ?>/assets/css/style.css">
+<link rel="stylesheet" href="<?= h($base . '/' . asset('assets/css/style.css')) ?>">
 <meta name="theme-color" content="#0a2e23">
-<link rel="icon" href="<?= h($base) ?>/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="<?= h($base . '/' . asset('assets/img/favicon.svg')) ?>" type="image/svg+xml">
 </head>
 <body>
 <div class="auth">
 
   <aside class="auth-side">
     <a class="logo" href="<?= h($home) ?>">
-      <span class="logo-mark" aria-hidden="true">৳</span>
-      <span class="logo-name"><?= h(APP_NAME) ?></span>
+      <span class="logo-mark" aria-hidden="true"></span>
+      <span class="logo-name">Uni<b>Wallet</b></span>
     </a>
 
     <div class="auth-pitch">
@@ -119,8 +119,8 @@ function show_error_page(int $code, ?Throwable $e = null): never
   <main class="auth-main" id="main">
     <div class="auth-card">
       <a class="logo logo-mobile" href="<?= h($home) ?>">
-        <span class="logo-mark" aria-hidden="true">৳</span>
-        <span class="logo-name"><?= h(APP_NAME) ?></span>
+        <span class="logo-mark" aria-hidden="true"></span>
+        <span class="logo-name">Uni<b>Wallet</b></span>
       </a>
       <p class="err-eyebrow"><?= (int) $code ?> · <?= h($page['note']) ?></p>
       <h1 class="auth-title err-title"><?= h($page['title']) ?></h1>

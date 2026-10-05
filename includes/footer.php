@@ -9,7 +9,7 @@ $page_scripts = $page_scripts ?? '';
 ?>
     <footer class="page-foot">
       <div class="foot-brand">
-        <span class="logo-mark logo-mark-sm" aria-hidden="true">৳</span>
+        <span class="logo-mark logo-mark-sm" aria-hidden="true"></span>
         <div>
           <strong><?= h(APP_NAME) ?></strong>
           <span>Budget tracker for UIU students</span>
@@ -33,8 +33,8 @@ $page_scripts = $page_scripts ?? '';
   </main>
 </div>
 
-<script src="assets/js/theme.js"></script>
-<script src="assets/js/app.js"></script>
+<script src="<?= h(asset('assets/js/theme.js')) ?>"></script>
+<script src="<?= h(asset('assets/js/app.js')) ?>"></script>
 <?= $page_scripts ?>
 </body>
 </html>
